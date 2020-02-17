@@ -197,7 +197,8 @@ class Game():
 
     def start_screen(self):
         intro_text = ["YandexSnake", "", "",
-                      "Управление с помощью стрелочек",]
+                      "Управление с помощью стрелочек",
+                      "R - рестарт, T - пауза"]
 
         fon = pygame.transform.scale(self.fon_image, (WIDTH, HEIGHT))
         screen.blit(fon, (0, 0))
@@ -336,6 +337,8 @@ class Game():
             screen.blit(string_rendered, intro_rect)
 
     def change_fon(self, but_info):
+        fon = pygame.transform.scale(self.fon_image, (WIDTH, HEIGHT))
+        screen.blit(fon, (0, 0))
         if but_info[1] in self.closed_fons:
             if self.money >= 5:
                 self.money -= 5
@@ -408,12 +411,13 @@ class Game():
             image = load_image('gameover.png')
         else:
             image = load_image('youwin.png')
-            self.complete_levels += 1
+            if self.complete_levels == level:
+                self.complete_levels += 1
             self.money += 5
             with open('data/records.csv', encoding="utf8") as csvfile:
                 reader = csv.reader(csvfile, delimiter=',', quotechar='"')
                 records = list(reader)
-                if float(records[level][1]) > time:
+                if records[level][1] == '---' or float(records[level][1]) > time:
                     records[level][1] = time
             with open('data/records.csv', 'w', newline='') as csvfile:
                 writer = csv.writer(csvfile, delimiter=',', quotechar='"')
